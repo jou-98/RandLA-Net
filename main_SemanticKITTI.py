@@ -8,11 +8,12 @@ import tensorflow as tf
 import numpy as np
 import os, argparse, pickle
 
+TMPDIR = os.environ["TMPDIR"]
 
 class SemanticKITTI:
     def __init__(self, test_id):
         self.name = 'SemanticKITTI'
-        self.dataset_path = '/data/semantic_kitti/dataset/sequences_0.06'
+        self.dataset_path = TMPDIR + '/data/semantic_kitti/dataset/sequences_0.06'
         self.label_to_names = {0: 'unlabeled',
                                1: 'car',
                                2: 'bicycle',
