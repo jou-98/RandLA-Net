@@ -1,7 +1,7 @@
 import numpy as np
 import open3d as o3d
 import sys
-import utils
+import util as utils
 
 SEQ = sys.argv[1]
 NUM = sys.argv[2]

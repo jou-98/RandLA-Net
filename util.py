@@ -4,23 +4,29 @@ import open3d as o3d
 BIN_DIR = './bin/'
 LABELs_DIR = './labels/'
 
+CLASSES = {0:"unlabeled", 1 : "outlier", 11: "bicycle", 15: "motorcycle",\
+        30: "person", 31: "bicyclist", 32: "motorcyclist", 40: "road",\
+        44: "parking", 48: "sidewalk", 49: "other-ground",80: "pole",\
+        81: "traffic-sign"}
+
 
 def render_color(pc,label,ply_path='./00_001000_colored.ply'):
     labels = np.unique(label)
+    print(np.unique(label,return_counts=True))
     colors = dict()
     for i in labels:
-        color = list(np.random.choice(range(10), size=3)/15)
+        color = list(np.random.choice(range(100), size=3)/100)
         colors[i] = color
-    print(colors)
+    #print(colors)
     rgb = np.zeros((pc.shape[0],3))
     for i in labels:
-        label_pos = pc[pc==i]
-        if np.issubdtype(label_pos.dtype,np.floating):
+        label_pos = np.where(label==i)
+        if not i in CLASSES:
             continue
-        print(label_pos.dtype)
         rgb[label_pos] = colors[i]
+        print(f'Colour of class {CLASSES[i]} is \
+        [{colors[i][0]*255},{colors[i][1]*255},{colors[i][2]*255}]')
     pcd = o3d.geometry.PointCloud()
-    print(pc.shape)
     pcd.points = o3d.utility.Vector3dVector(pc)
     # print(rgb.shape())
     pcd.colors = o3d.utility.Vector3dVector(rgb)
@@ -42,8 +48,8 @@ def save_pc(array,ply_path='./00_001000.ply'):
 
 
 # Reads a .label file into numpy array
-def read_label(path='./labels/00_000143.label'):
-    labels = np.fromfile(path, dtype=np.uint16).reshape((-1,2))
+def read_label(path='./labels/00_000143.label',dim=2):
+    labels = np.fromfile(path, dtype=np.uint16).reshape((-1,dim))
     labels = labels[:,0]
     #print(np.unique(labels,return_counts=True))
     return labels
