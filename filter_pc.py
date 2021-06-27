@@ -15,7 +15,7 @@ bin_path = BIN_DIR # + num + '.bin'
 pts = utils.read_pc(bin_path)
 label_path = LABEL_DIR # + num + '.label'
 label = utils.read_label(label_path)
-
+print(f'Preprocessing file {NUM} from sequence {SEQ}')
 
 """
 pcd1 = o3d.geometry.PointCloud()
@@ -39,10 +39,6 @@ pts = np.delete(pts,others,axis=0)
 new_labels = np.delete(label,others,axis=0)
 # new_labels = new_labels[:,0] # Takes the category number but not the instance number
 
-"""
-new_labels[new_labels!=30] = 0
-new_labels[new_labels==30] = 1
-"""
 
 new_labels.tofile(LABEL_DIR)
 new_labels = new_labels.reshape((-1,1))

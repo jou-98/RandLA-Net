@@ -1,5 +1,6 @@
 #!/bin/bash
 
+oldseq="00"
 for file in dataset/sequences/*/labels/*.label
 do 
     seq=$(echo $file | grep -o '/[0-9]*/' | cut -d'/' -f2)
