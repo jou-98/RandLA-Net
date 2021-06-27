@@ -29,8 +29,13 @@ blacklist = [10,13,16,18,20,\
 # Keep the classes person, bicycle, motorcycle, bicyclist, motorcyclist, pole, traffic sign
 # Use unlabeled, outlier, road, parking, sidewalk, other-ground as background
 # Previous: Keeping 30 as the positive class, and 0, 1, 40-49 as negative class
-
-
+target = [11,15,30,31,32,80,81]
+classes,counts=np.unique(label,return_counts=True)
+# Remove file and return if target classes are not found
+if not set(target) & set(classes):
+    os.remove(bin_path)
+    os.remove(label_path)
+    return
 
 others = np.isin(label,blacklist)
 #print(others.shape)
