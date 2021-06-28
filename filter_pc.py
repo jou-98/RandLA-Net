@@ -33,9 +33,10 @@ target = [11,15,30,31,32,80,81]
 classes,counts=np.unique(label,return_counts=True)
 # Remove file and return if target classes are not found
 if not set(target) & set(classes):
+    print(f'Deleting file {NUM} from sequence {SEQ}')
     os.remove(bin_path)
     os.remove(label_path)
-    return
+    sys.exit()
 
 others = np.isin(label,blacklist)
 #print(others.shape)
