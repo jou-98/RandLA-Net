@@ -122,11 +122,14 @@ class DataProcessing:
 
     @staticmethod
     def load_label_kitti(label_path, remap_lut):
-        label = np.fromfile(label_path, dtype=np.uint32)
+        label = np.fromfile(label_path, dtype=np.uint16)
         label = label.reshape((-1))
+        """
         sem_label = label & 0xFFFF  # semantic label in lower half
         inst_label = label >> 16  # instance id in upper half
         assert ((sem_label + (inst_label << 16) == label).all())
+        """
+        sem_label=label
         sem_label = remap_lut[sem_label]
         return sem_label.astype(np.int32)
 
