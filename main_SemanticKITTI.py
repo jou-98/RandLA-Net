@@ -173,12 +173,15 @@ class SemanticKITTI:
         self.batch_train_data = self.batch_train_data.prefetch(cfg.batch_size)
         self.batch_val_data = self.batch_val_data.prefetch(cfg.val_batch_size)
         self.batch_test_data = self.batch_test_data.prefetch(cfg.val_batch_size)
-        
-        iter = tf.compat.v1.data.Iterator.from_structure(tf.compat.v1.data.get_output_types(self.batch_train_data), tf.compat.v1.data.get_output_shapes(self.batch_train_data))
-        self.flat_inputs = iter.get_next()
+
+        iter =  tf.compat.v1.data.Iterator.from_structure(\
+                tf.compat.v1.data.get_output_types(self.batch_train_data),\
+                tf.compat.v1.data.get_output_shapes(self.batch_train_data))
+        #self.flat_inputs = iter.get_next()
         self.train_init_op = iter.make_initializer(self.batch_train_data)
         self.val_init_op = iter.make_initializer(self.batch_val_data)
         self.test_init_op = iter.make_initializer(self.batch_test_data)
+        self.flat_inputs = iter.get_next()
 
 
 if __name__ == '__main__':
