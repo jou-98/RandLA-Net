@@ -24,7 +24,8 @@ class SemanticKITTI:
                                7: 'sidewalk',
                                8: 'other-ground',
                                9: 'pole',
-                               10: 'traffic-sign'}
+                               10: 'traffic-sign',
+                               11: 'motorcycle'}
         self.num_classes = len(self.label_to_names)
         self.label_values = np.sort([k for k, v in self.label_to_names.items()])
         self.label_to_idx = {l: i for i, l in enumerate(self.label_values)}

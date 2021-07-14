@@ -110,7 +110,7 @@ learning_map:
   0 : 0     # "unlabeled"
   1 : 0     # "outlier" mapped to "unlabeled" --------------------------mapped
   11: 1     # "bicycle"
-  # Not sure if this one's in 15: 2     # "motorcycle"
+  15: 11     # "motorcycle"
   30: 2     # "person"
   31: 3     # "bicyclist"
   32: 4     # "motorcyclist"
