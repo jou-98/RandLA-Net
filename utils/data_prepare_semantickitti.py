@@ -41,7 +41,7 @@ for seq_id in seq_list:
         os.makedirs(label_path_out) if not exists(label_path_out) else None
         scan_list = np.sort(os.listdir(pc_path))
         for scan_id in scan_list:
-            if scan_id % 500 == 0:
+            if int(scan_id[:6]) % 500 == 0:
                 print(scan_id)
             points = DP.load_pc_kitti(join(pc_path, scan_id))
             labels = DP.load_label_kitti(join(label_path, str(scan_id[:-4]) + '.label'), remap_lut)
@@ -65,7 +65,7 @@ for seq_id in seq_list:
         os.makedirs(proj_path) if not exists(proj_path) else None
         scan_list = np.sort(os.listdir(pc_path))
         for scan_id in scan_list:
-            if scan_id % 500 == 0:
+            if int(scan_id[:6]) % 500 == 0:
                 print(scan_id)
             points = DP.load_pc_kitti(join(pc_path, scan_id))
             sub_points = DP.grid_sub_sampling(points, grid_size=0.06)

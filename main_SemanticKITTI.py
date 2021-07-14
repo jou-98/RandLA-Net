@@ -132,10 +132,10 @@ class SemanticKITTI:
             input_up_samples = []
 
             for i in range(cfg.num_layers):
-                neighbour_idx = tf.py_func(DP.knn_search, [batch_pc, batch_pc, cfg.k_n], tf.int32)
+                neighbour_idx = tf.py_function(DP.knn_search, [batch_pc, batch_pc, cfg.k_n], tf.int32)
                 sub_points = batch_pc[:, :tf.shape(batch_pc)[1] // cfg.sub_sampling_ratio[i], :]
                 pool_i = neighbour_idx[:, :tf.shape(batch_pc)[1] // cfg.sub_sampling_ratio[i], :]
-                up_i = tf.py_func(DP.knn_search, [sub_points, batch_pc, 1], tf.int32)
+                up_i = tf.py_function(DP.knn_search, [sub_points, batch_pc, 1], tf.int32)
                 input_points.append(batch_pc)
                 input_neighbors.append(neighbour_idx)
                 input_pools.append(pool_i)
@@ -173,8 +173,8 @@ class SemanticKITTI:
         self.batch_train_data = self.batch_train_data.prefetch(cfg.batch_size)
         self.batch_val_data = self.batch_val_data.prefetch(cfg.val_batch_size)
         self.batch_test_data = self.batch_test_data.prefetch(cfg.val_batch_size)
-
-        iter = tf.data.Iterator.from_structure(self.batch_train_data.output_types, self.batch_train_data.output_shapes)
+        
+        iter = tf.compat.v1.data.Iterator.from_structure(tf.compat.v1.data.get_output_types(self.batch_train_data), tf.compat.v1.data.get_output_shapes(self.batch_train_data))
         self.flat_inputs = iter.get_next()
         self.train_init_op = iter.make_initializer(self.batch_train_data)
         self.val_init_op = iter.make_initializer(self.batch_val_data)
