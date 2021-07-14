@@ -4,7 +4,7 @@ from os.path import join, exists, dirname, abspath
 from sklearn.neighbors import KDTree
 import os
 
-TMPDIR = os.environ["TMPDIR"]
+TMPDIR = '' # os.environ["TMPDIR"]
 
 BASE_DIR = dirname(abspath(__file__))
 ROOT_DIR = dirname(BASE_DIR)
@@ -20,8 +20,8 @@ remap_lut = np.zeros((max_key + 100), dtype=np.int32)
 remap_lut[list(remap_dict.keys())] = list(remap_dict.values())
 
 grid_size = 0.06
-dataset_path = TMPDIR + '/data/semantic_kitti/dataset/sequences'
-output_path = TMPDIR + '/data/semantic_kitti/dataset/sequences' + '_' + str(grid_size)
+dataset_path = TMPDIR + 'data/semantic_kitti/dataset/sequences'
+output_path = TMPDIR + 'data/semantic_kitti/dataset/sequences' + '_' + str(grid_size)
 seq_list = np.sort(os.listdir(dataset_path))
 
 for seq_id in seq_list:
@@ -35,13 +35,14 @@ for seq_id in seq_list:
     os.makedirs(pc_path_out) if not exists(pc_path_out) else None
     os.makedirs(KDTree_path_out) if not exists(KDTree_path_out) else None
 
-    if int(seq_id) < 11:
+    if int(seq_id) < 10:
         label_path = join(seq_path, 'labels')
         label_path_out = join(seq_path_out, 'labels')
         os.makedirs(label_path_out) if not exists(label_path_out) else None
         scan_list = np.sort(os.listdir(pc_path))
         for scan_id in scan_list:
-            print(scan_id)
+            if scan_id % 500 == 0:
+                print(scan_id)
             points = DP.load_pc_kitti(join(pc_path, scan_id))
             labels = DP.load_label_kitti(join(label_path, str(scan_id[:-4]) + '.label'), remap_lut)
             sub_points, sub_labels = DP.grid_sub_sampling(points, labels=labels, grid_size=grid_size)
@@ -64,7 +65,8 @@ for seq_id in seq_list:
         os.makedirs(proj_path) if not exists(proj_path) else None
         scan_list = np.sort(os.listdir(pc_path))
         for scan_id in scan_list:
-            print(scan_id)
+            if scan_id % 500 == 0:
+                print(scan_id)
             points = DP.load_pc_kitti(join(pc_path, scan_id))
             sub_points = DP.grid_sub_sampling(points, grid_size=0.06)
             search_tree = KDTree(sub_points)

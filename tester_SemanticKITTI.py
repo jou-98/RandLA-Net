@@ -96,7 +96,7 @@ class ModelTester:
                     print('\nReproject Vote #{:d}'.format(int(np.floor(new_min))))
 
                     # For validation set
-                    num_classes = 19
+                    num_classes = 12
                     gt_classes = [0 for _ in range(num_classes)]
                     positive_classes = [0 for _ in range(num_classes)]
                     true_positive_classes = [0 for _ in range(num_classes)]
@@ -134,10 +134,12 @@ class ModelTester:
                                               str(frame) + '.label')
                             pred = pred + 1
                             pred = pred.astype(np.uint32)
+                            """
                             upper_half = pred >> 16  # get upper half for instances
                             lower_half = pred & 0xFFFF  # get lower half for semantics
                             lower_half = remap_lut[lower_half]  # do the remapping of semantics
                             pred = (upper_half << 16) + lower_half  # reconstruct full label
+                            """
                             pred = pred.astype(np.uint32)
                             pred.tofile(store_path)
                     log_out(str(dataset.test_scan_number) + ' finished', self.Log_file)

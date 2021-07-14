@@ -8,12 +8,12 @@ import tensorflow as tf
 import numpy as np
 import os, argparse, pickle
 
-TMPDIR = os.environ["TMPDIR"]
+TMPDIR = '' # os.environ["TMPDIR"]
 
 class SemanticKITTI:
     def __init__(self, test_id):
         self.name = 'SemanticKITTI'
-        self.dataset_path = TMPDIR + '/data/semantic_kitti/dataset/sequences_0.06'
+        self.dataset_path = TMPDIR + 'data/semantic_kitti/dataset/sequences_0.06'
         self.label_to_names = {0: 'unlabeled',
                                1: 'bicycle',
                                2: 'person',
@@ -104,7 +104,7 @@ class SemanticKITTI:
             search_tree = pickle.load(f)
         points = np.array(search_tree.data, copy=False)
         # Load labels
-        if int(seq_id) >= 11:
+        if int(seq_id) >= 9:
             labels = np.zeros(np.shape(points)[0], dtype=np.uint8)
         else:
             label_path = join(self.dataset_path, seq_id, 'labels', frame_id + '.npy')
