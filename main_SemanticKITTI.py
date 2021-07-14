@@ -16,16 +16,16 @@ class SemanticKITTI:
         self.dataset_path = TMPDIR + 'data/semantic_kitti/dataset/sequences_0.06'
         self.label_to_names = {0: 'unlabeled',
                                1: 'bicycle',
-                               2: 'person',
-                               3: 'bicyclist',
-                               4: 'motorcyclist',
-                               5: 'road',
-                               6: 'parking',
-                               7: 'sidewalk',
-                               8: 'other-ground',
-                               9: 'pole',
-                               10: 'traffic-sign',
-                               11: 'motorcycle'}
+                               2: 'motorcycle',
+                               3: 'person',
+                               4: 'bicyclist',
+                               5: 'motorcyclist',
+                               6: 'road',
+                               7: 'parking',
+                               8: 'sidewalk',
+                               9: 'other-ground',
+                               10: 'pole',
+                               11: 'traffic-sign'}
         self.num_classes = len(self.label_to_names)
         self.label_values = np.sort([k for k, v in self.label_to_names.items()])
         self.label_to_idx = {l: i for i, l in enumerate(self.label_values)}

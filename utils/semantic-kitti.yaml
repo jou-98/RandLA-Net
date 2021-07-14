@@ -110,16 +110,16 @@ learning_map:
   0 : 0     # "unlabeled"
   1 : 0     # "outlier" mapped to "unlabeled" --------------------------mapped
   11: 1     # "bicycle"
-  15: 11     # "motorcycle"
-  30: 2     # "person"
-  31: 3     # "bicyclist"
-  32: 4     # "motorcyclist"
-  40: 5     # "road"
-  44: 6    # "parking"
-  48: 7    # "sidewalk"
-  49: 8    # "other-ground"
-  80: 9    # "pole"
-  81: 10    # "traffic-sign"
+  15: 2     # "motorcycle"
+  30: 3     # "person"
+  31: 4     # "bicyclist"
+  32: 5     # "motorcyclist"
+  40: 6     # "road"
+  44: 7    # "parking"
+  48: 8    # "sidewalk"
+  49: 9    # "other-ground"
+  80: 10    # "pole"
+  81: 11    # "traffic-sign"
   99: 0     # "other-object" to "unlabeled" ----------------------------mapped
 
 learning_map_inv: # inverse of previous map
