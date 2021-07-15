@@ -7,6 +7,7 @@ import numpy as np
 import helper_tf_util
 import time
 
+tf.compat.v1.disable_eager_execution()
 
 def log_out(out_str, f_out):
     f_out.write(out_str + '\n')
@@ -26,7 +27,7 @@ class Network:
                 self.saving_path = self.config.saving_path
             makedirs(self.saving_path) if not exists(self.saving_path) else None
 
-        with tf.variable_scope('inputs'):
+        with tf.compat.v1.variable_scope('inputs'):
             self.inputs = dict()
             num_layers = self.config.num_layers
             self.inputs['xyz'] = flat_inputs[:num_layers]
@@ -39,7 +40,7 @@ class Network:
             self.inputs['cloud_inds'] = flat_inputs[4 * num_layers + 3]
 
             self.labels = self.inputs['labels']
-            self.is_training = tf.placeholder(tf.bool, shape=())
+            self.is_training = tf.compat.v1.placeholder(tf.bool, shape=())
             self.training_step = 1
             self.training_epoch = 0
             self.correct_prediction = 0
@@ -48,13 +49,13 @@ class Network:
             self.class_weights = DP.get_class_weights(dataset.name)
             self.Log_file = open('log_train_' + dataset.name + str(dataset.val_split) + '.txt', 'a')
 
-        with tf.variable_scope('layers'):
+        with tf.compat.v1.variable_scope('layers'):
             self.logits = self.inference(self.inputs, self.is_training)
 
         #####################################################################
         # Ignore the invalid point (unlabeled) when calculating the loss #
         #####################################################################
-        with tf.variable_scope('loss'):
+        with tf.compat.v1.variable_scope('loss'):
             self.logits = tf.reshape(self.logits, [-1, config.num_classes])
             self.labels = tf.reshape(self.labels, [-1])
 
@@ -77,12 +78,12 @@ class Network:
 
             self.loss = self.get_loss(valid_logits, valid_labels, self.class_weights)
 
-        with tf.variable_scope('optimizer'):
+        with tf.compat.v1.variable_scope('optimizer'):
             self.learning_rate = tf.Variable(config.learning_rate, trainable=False, name='learning_rate')
             self.train_op = tf.train.AdamOptimizer(self.learning_rate).minimize(self.loss)
             self.extra_update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
 
-        with tf.variable_scope('results'):
+        with tf.compat.v1.variable_scope('results'):
             self.correct_prediction = tf.nn.in_top_k(valid_logits, valid_labels, 1)
             self.accuracy = tf.reduce_mean(tf.cast(self.correct_prediction, tf.float32))
             self.prob_logits = tf.nn.softmax(self.logits)
@@ -104,8 +105,8 @@ class Network:
 
         d_out = self.config.d_out
         feature = inputs['features']
-        feature = tf.layers.dense(feature, 8, activation=None, name='fc0')
-        feature = tf.nn.leaky_relu(tf.layers.batch_normalization(feature, -1, 0.99, 1e-6, training=is_training))
+        feature = tf.compat.v1.layers.dense(feature, 8, activation=None, name='fc0')
+        feature = tf.nn.leaky_relu(tf.compat.v1.layers.batch_normalization(feature, -1, 0.99, 1e-6, training=is_training))
         feature = tf.expand_dims(feature, axis=2)
 
         # ###########################Encoder############################
@@ -348,7 +349,7 @@ class Network:
         num_neigh = tf.shape(feature_set)[2]
         d = feature_set.get_shape()[3].value
         f_reshaped = tf.reshape(feature_set, shape=[-1, num_neigh, d])
-        att_activation = tf.layers.dense(f_reshaped, d, activation=None, use_bias=False, name=name + 'fc')
+        att_activation = tf.compat.v1.layers.dense(f_reshaped, d, activation=None, use_bias=False, name=name + 'fc')
         att_scores = tf.nn.softmax(att_activation, axis=1)
         f_agg = f_reshaped * att_scores
         f_agg = tf.reduce_sum(f_agg, axis=1)
