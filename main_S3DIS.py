@@ -176,10 +176,10 @@ class S3DIS:
             input_up_samples = []
 
             for i in range(cfg.num_layers):
-                neighbour_idx = tf.py_func(DP.knn_search, [batch_xyz, batch_xyz, cfg.k_n], tf.int32)
-                sub_points = batch_xyz[:, :tf.shape(batch_xyz)[1] // cfg.sub_sampling_ratio[i], :]
-                pool_i = neighbour_idx[:, :tf.shape(batch_xyz)[1] // cfg.sub_sampling_ratio[i], :]
-                up_i = tf.py_func(DP.knn_search, [sub_points, batch_xyz, 1], tf.int32)
+                neighbour_idx = tf.compat.v1.py_func(DP.knn_search, [batch_xyz, batch_xyz, cfg.k_n], tf.int32)
+                sub_points = batch_xyz[:, :tf.shape(input=batch_xyz)[1] // cfg.sub_sampling_ratio[i], :]
+                pool_i = neighbour_idx[:, :tf.shape(input=batch_xyz)[1] // cfg.sub_sampling_ratio[i], :]
+                up_i = tf.compat.v1.py_func(DP.knn_search, [sub_points, batch_xyz, 1], tf.int32)
                 input_points.append(batch_xyz)
                 input_neighbors.append(neighbour_idx)
                 input_pools.append(pool_i)
@@ -211,7 +211,7 @@ class S3DIS:
         self.batch_train_data = self.batch_train_data.prefetch(cfg.batch_size)
         self.batch_val_data = self.batch_val_data.prefetch(cfg.val_batch_size)
 
-        iter = tf.data.Iterator.from_structure(self.batch_train_data.output_types, self.batch_train_data.output_shapes)
+        iter = tf.compat.v1.data.Iterator.from_structure(self.batch_train_data.output_types, self.batch_train_data.output_shapes)
         self.flat_inputs = iter.get_next()
         self.train_init_op = iter.make_initializer(self.batch_train_data)
         self.val_init_op = iter.make_initializer(self.batch_val_data)
@@ -257,8 +257,8 @@ if __name__ == '__main__':
         # Visualize data #
         ##################
 
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
+        with tf.compat.v1.Session() as sess:
+            sess.run(tf.compat.v1.global_variables_initializer())
             sess.run(dataset.train_init_op)
             while True:
                 flat_inputs = sess.run(dataset.flat_inputs)

@@ -65,7 +65,7 @@ class Network:
                 ignored_bool = tf.logical_or(ignored_bool, tf.equal(self.labels, ign_label))
 
             # Collect logits and labels that are not ignored
-            valid_idx = tf.squeeze(tf.where(tf.logical_not(ignored_bool)))
+            valid_idx = tf.squeeze(tf.compat.v1.where(tf.logical_not(ignored_bool)))
             valid_logits = tf.gather(self.logits, valid_idx, axis=0)
             valid_labels_init = tf.gather(self.labels, valid_idx, axis=0)
 
@@ -80,26 +80,26 @@ class Network:
 
         with tf.compat.v1.variable_scope('optimizer'):
             self.learning_rate = tf.Variable(config.learning_rate, trainable=False, name='learning_rate')
-            self.train_op = tf.train.AdamOptimizer(self.learning_rate).minimize(self.loss)
-            self.extra_update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+            self.train_op = tf.compat.v1.train.AdamOptimizer(self.learning_rate).minimize(self.loss)
+            self.extra_update_ops = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.UPDATE_OPS)
 
         with tf.compat.v1.variable_scope('results'):
-            self.correct_prediction = tf.nn.in_top_k(valid_logits, valid_labels, 1)
-            self.accuracy = tf.reduce_mean(tf.cast(self.correct_prediction, tf.float32))
+            self.correct_prediction = tf.nn.in_top_k(predictions=valid_logits, targets=valid_labels, k=1)
+            self.accuracy = tf.reduce_mean(input_tensor=tf.cast(self.correct_prediction, tf.float32))
             self.prob_logits = tf.nn.softmax(self.logits)
 
-            tf.summary.scalar('learning_rate', self.learning_rate)
-            tf.summary.scalar('loss', self.loss)
-            tf.summary.scalar('accuracy', self.accuracy)
+            tf.compat.v1.summary.scalar('learning_rate', self.learning_rate)
+            tf.compat.v1.summary.scalar('loss', self.loss)
+            tf.compat.v1.summary.scalar('accuracy', self.accuracy)
 
-        my_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
-        self.saver = tf.train.Saver(my_vars, max_to_keep=100)
-        c_proto = tf.ConfigProto()
+        my_vars = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.GLOBAL_VARIABLES)
+        self.saver = tf.compat.v1.train.Saver(my_vars, max_to_keep=100)
+        c_proto = tf.compat.v1.ConfigProto()
         c_proto.gpu_options.allow_growth = True
-        self.sess = tf.Session(config=c_proto)
-        self.merged = tf.summary.merge_all()
-        self.train_writer = tf.summary.FileWriter(config.train_sum_dir, self.sess.graph)
-        self.sess.run(tf.global_variables_initializer())
+        self.sess = tf.compat.v1.Session(config=c_proto)
+        self.merged = tf.compat.v1.summary.merge_all()
+        self.train_writer = tf.compat.v1.summary.FileWriter(config.train_sum_dir, self.sess.graph)
+        self.sess.run(tf.compat.v1.global_variables_initializer())
 
     def inference(self, inputs, is_training):
 
@@ -261,12 +261,12 @@ class Network:
 
     def get_loss(self, logits, labels, pre_cal_weights):
         # calculate the weighted cross entropy according to the inverse frequency
-        class_weights = tf.convert_to_tensor(pre_cal_weights, dtype=tf.float32)
+        class_weights = tf.convert_to_tensor(value=pre_cal_weights, dtype=tf.float32)
         one_hot_labels = tf.one_hot(labels, depth=self.config.num_classes)
-        weights = tf.reduce_sum(class_weights * one_hot_labels, axis=1)
-        unweighted_losses = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_labels)
+        weights = tf.reduce_sum(input_tensor=class_weights * one_hot_labels, axis=1)
+        unweighted_losses = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=tf.stop_gradient(one_hot_labels))
         weighted_losses = unweighted_losses * weights
-        output_loss = tf.reduce_mean(weighted_losses)
+        output_loss = tf.reduce_mean(input_tensor=weighted_losses)
         return output_loss
 
     def dilated_res_block(self, feature, xyz, neigh_idx, d_out, name, is_training):
@@ -294,9 +294,9 @@ class Network:
 
     def relative_pos_encoding(self, xyz, neigh_idx):
         neighbor_xyz = self.gather_neighbour(xyz, neigh_idx)
-        xyz_tile = tf.tile(tf.expand_dims(xyz, axis=2), [1, 1, tf.shape(neigh_idx)[-1], 1])
+        xyz_tile = tf.tile(tf.expand_dims(xyz, axis=2), [1, 1, tf.shape(input=neigh_idx)[-1], 1])
         relative_xyz = xyz_tile - neighbor_xyz
-        relative_dis = tf.sqrt(tf.reduce_sum(tf.square(relative_xyz), axis=-1, keepdims=True))
+        relative_dis = tf.sqrt(tf.reduce_sum(input_tensor=tf.square(relative_xyz), axis=-1, keepdims=True))
         relative_feature = tf.concat([relative_dis, relative_xyz, xyz_tile, neighbor_xyz], axis=-1)
         return relative_feature
 
@@ -308,13 +308,13 @@ class Network:
         :return: pool_features = [B, N', d] pooled features matrix
         """
         feature = tf.squeeze(feature, axis=2)
-        num_neigh = tf.shape(pool_idx)[-1]
+        num_neigh = tf.shape(input=pool_idx)[-1]
         d = feature.get_shape()[-1]
-        batch_size = tf.shape(pool_idx)[0]
+        batch_size = tf.shape(input=pool_idx)[0]
         pool_idx = tf.reshape(pool_idx, [batch_size, -1])
-        pool_features = tf.batch_gather(feature, pool_idx)
+        pool_features = tf.compat.v1.batch_gather(feature, pool_idx)
         pool_features = tf.reshape(pool_features, [batch_size, -1, num_neigh, d])
-        pool_features = tf.reduce_max(pool_features, axis=2, keepdims=True)
+        pool_features = tf.reduce_max(input_tensor=pool_features, axis=2, keepdims=True)
         return pool_features
 
     @staticmethod
@@ -325,35 +325,35 @@ class Network:
         :return: [B, up_num_points, d] interpolated features matrix
         """
         feature = tf.squeeze(feature, axis=2)
-        batch_size = tf.shape(interp_idx)[0]
-        up_num_points = tf.shape(interp_idx)[1]
+        batch_size = tf.shape(input=interp_idx)[0]
+        up_num_points = tf.shape(input=interp_idx)[1]
         interp_idx = tf.reshape(interp_idx, [batch_size, up_num_points])
-        interpolated_features = tf.batch_gather(feature, interp_idx)
+        interpolated_features = tf.compat.v1.batch_gather(feature, interp_idx)
         interpolated_features = tf.expand_dims(interpolated_features, axis=2)
         return interpolated_features
 
     @staticmethod
     def gather_neighbour(pc, neighbor_idx):
         # gather the coordinates or features of neighboring points
-        batch_size = tf.shape(pc)[0]
-        num_points = tf.shape(pc)[1]
+        batch_size = tf.shape(input=pc)[0]
+        num_points = tf.shape(input=pc)[1]
         d = pc.get_shape()[2]
         index_input = tf.reshape(neighbor_idx, shape=[batch_size, -1])
-        features = tf.batch_gather(pc, index_input)
-        features = tf.reshape(features, [batch_size, num_points, tf.shape(neighbor_idx)[-1], d])
+        features = tf.compat.v1.batch_gather(pc, index_input)
+        features = tf.reshape(features, [batch_size, num_points, tf.shape(input=neighbor_idx)[-1], d])
         return features
 
     @staticmethod
     def att_pooling(feature_set, d_out, name, is_training):
-        batch_size = tf.shape(feature_set)[0]
-        num_points = tf.shape(feature_set)[1]
-        num_neigh = tf.shape(feature_set)[2]
+        batch_size = tf.shape(input=feature_set)[0]
+        num_points = tf.shape(input=feature_set)[1]
+        num_neigh = tf.shape(input=feature_set)[2]
         d = feature_set.get_shape()[3]
         f_reshaped = tf.reshape(feature_set, shape=[-1, num_neigh, d])
         att_activation = tf.compat.v1.layers.dense(f_reshaped, d, activation=None, use_bias=False, name=name + 'fc')
         att_scores = tf.nn.softmax(att_activation, axis=1)
         f_agg = f_reshaped * att_scores
-        f_agg = tf.reduce_sum(f_agg, axis=1)
+        f_agg = tf.reduce_sum(input_tensor=f_agg, axis=1)
         f_agg = tf.reshape(f_agg, [batch_size, num_points, 1, d])
         f_agg = helper_tf_util.conv2d(f_agg, d_out, [1, 1], name + 'mlp', [1, 1], 'VALID', True, is_training)
         return f_agg

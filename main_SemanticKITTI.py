@@ -136,8 +136,8 @@ class SemanticKITTI:
 
             for i in range(cfg.num_layers):
                 neighbour_idx = tf.py_function(DP.knn_search, [batch_pc, batch_pc, cfg.k_n], tf.int32)
-                sub_points = batch_pc[:, :tf.shape(batch_pc)[1] // cfg.sub_sampling_ratio[i], :]
-                pool_i = neighbour_idx[:, :tf.shape(batch_pc)[1] // cfg.sub_sampling_ratio[i], :]
+                sub_points = batch_pc[:, :tf.shape(input=batch_pc)[1] // cfg.sub_sampling_ratio[i], :]
+                pool_i = neighbour_idx[:, :tf.shape(input=batch_pc)[1] // cfg.sub_sampling_ratio[i], :]
                 up_i = tf.py_function(DP.knn_search, [sub_points, batch_pc, 1], tf.int32)
                 input_points.append(batch_pc)
                 input_neighbors.append(neighbour_idx)
@@ -227,8 +227,8 @@ if __name__ == '__main__':
         # Visualize data #
         ##################
 
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
+        with tf.compat.v1.Session() as sess:
+            sess.run(tf.compat.v1.global_variables_initializer())
             sess.run(dataset.train_init_op)
             while True:
                 flat_inputs = sess.run(dataset.flat_inputs)
