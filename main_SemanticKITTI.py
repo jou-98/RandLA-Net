@@ -115,7 +115,7 @@ class SemanticKITTI:
     def crop_pc(points, labels, search_tree, pick_idx):
         # crop a fixed size point cloud for training
         center_point = points[pick_idx, :].reshape(1, -1)
-        print(f'centre_point.shape={centre_point.shape}')
+        print(f'center_point.shape={center_point.shape}')
         select_idx = search_tree.query(center_point, k=cfg.num_points)[1][0]
         select_idx = DP.shuffle_idx(select_idx)
         select_points = points[select_idx]
@@ -123,8 +123,7 @@ class SemanticKITTI:
         return select_points, select_labels, select_idx
 
     @staticmethod
-    def get_tf_mapping2():
-
+    def get_tf_mapping2()
         def tf_map(batch_pc, batch_label, batch_pc_idx, batch_cloud_idx):
             features = batch_pc
             input_points = []
