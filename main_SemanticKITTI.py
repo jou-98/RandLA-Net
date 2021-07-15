@@ -68,6 +68,7 @@ class SemanticKITTI:
                     pc_path = path_list[cloud_ind]
                     pc, tree, labels = self.get_data(pc_path)
                     # crop a small point cloud
+                    print(f'len(pc) = {len(pc)}')
                     pick_idx = np.random.choice(len(pc), 1)
                     selected_pc, selected_labels, selected_idx = self.crop_pc(pc, labels, tree, pick_idx)
                 else:
@@ -124,6 +125,7 @@ class SemanticKITTI:
 
     @staticmethod
     def get_tf_mapping2()
+
         def tf_map(batch_pc, batch_label, batch_pc_idx, batch_cloud_idx):
             features = batch_pc
             input_points = []
