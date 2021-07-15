@@ -46,12 +46,12 @@ def _variable_with_weight_decay(name, shape, stddev, wd, use_xavier=True):
     else:
         # initializer = tf.truncated_normal_initializer(stddev=stddev)
         with tf.device('/cpu:0'):
-            var = tf.truncated_normal(shape, stddev=np.sqrt(2 / shape[-1]))
+            var = tf.random.truncated_normal(shape, stddev=np.sqrt(2 / shape[-1]))
             var = tf.round(var * tf.constant(1000, dtype=tf.float32)) / tf.constant(1000, dtype=tf.float32)
             var = tf.Variable(var, name='weights')
     if wd is not None:
         weight_decay = tf.multiply(tf.nn.l2_loss(var), wd, name='weight_loss')
-        tf.add_to_collection('losses', weight_decay)
+        tf.compat.v1.add_to_collection('losses', weight_decay)
     return var
 
 
@@ -89,7 +89,7 @@ def conv1d(inputs,
       Variable tensor
     """
     with tf.compat.v1.variable_scope(scope) as sc:
-        num_in_channels = inputs.get_shape()[-1].value
+        num_in_channels = inputs.get_shape()[-1]
         kernel_shape = [kernel_size,
                         num_in_channels, num_output_channels]
         kernel = _variable_with_weight_decay('weights',
@@ -147,7 +147,7 @@ def conv2d(inputs,
     """
     with tf.compat.v1.variable_scope(scope) as sc:
         kernel_h, kernel_w = kernel_size
-        num_in_channels = inputs.get_shape()[-1].value
+        num_in_channels = inputs.get_shape()[-1]
         kernel_shape = [kernel_h, kernel_w,
                         num_in_channels, num_output_channels]
         kernel = _variable_with_weight_decay('weights',
@@ -207,7 +207,7 @@ def conv2d_transpose(inputs,
     """
     with tf.compat.v1.variable_scope(scope) as sc:
         kernel_h, kernel_w = kernel_size
-        num_in_channels = inputs.get_shape()[-1].value
+        num_in_channels = inputs.get_shape()[-1]
         kernel_shape = [kernel_h, kernel_w,
                         num_output_channels, num_in_channels]  # reversed to conv2d
         kernel = _variable_with_weight_decay('weights',
@@ -285,7 +285,7 @@ def conv3d(inputs,
     """
     with tf.compat.v1.variable_scope(scope) as sc:
         kernel_d, kernel_h, kernel_w = kernel_size
-        num_in_channels = inputs.get_shape()[-1].value
+        num_in_channels = inputs.get_shape()[-1]
         kernel_shape = [kernel_d, kernel_h, kernel_w,
                         num_in_channels, num_output_channels]
         kernel = _variable_with_weight_decay('weights',
@@ -330,7 +330,7 @@ def fully_connected(inputs,
       Variable tensor of size B x num_outputs.
     """
     with tf.compat.v1.variable_scope(scope) as sc:
-        num_input_units = inputs.get_shape()[-1].value
+        num_input_units = inputs.get_shape()[-1]
         weights = _variable_with_weight_decay('weights',
                                               shape=[num_input_units, num_outputs],
                                               use_xavier=use_xavier,
@@ -468,7 +468,7 @@ def batch_norm_template(inputs, is_training, scope, moments_dims, bn_decay):
         normed:        batch-normalized maps
     """
     with tf.compat.v1.variable_scope(scope) as sc:
-        num_channels = inputs.get_shape()[-1].value
+        num_channels = inputs.get_shape()[-1]
         beta = tf.Variable(tf.constant(0.0, shape=[num_channels]),
                            name='beta', trainable=True)
         gamma = tf.Variable(tf.constant(1.0, shape=[num_channels]),

@@ -121,7 +121,7 @@ class Network:
             f_encoder_list.append(f_sampled_i)
         # ###########################Encoder############################
 
-        feature = helper_tf_util.conv2d(f_encoder_list[-1], f_encoder_list[-1].get_shape()[3].value, [1, 1],
+        feature = helper_tf_util.conv2d(f_encoder_list[-1], f_encoder_list[-1].get_shape()[3], [1, 1],
                                         'decoder_0',
                                         [1, 1], 'VALID', True, is_training)
 
@@ -130,7 +130,7 @@ class Network:
         for j in range(self.config.num_layers):
             f_interp_i = self.nearest_interpolation(feature, inputs['interp_idx'][-j - 1])
             f_decoder_i = helper_tf_util.conv2d_transpose(tf.concat([f_encoder_list[-j - 2], f_interp_i], axis=3),
-                                                          f_encoder_list[-j - 2].get_shape()[-1].value, [1, 1],
+                                                          f_encoder_list[-j - 2].get_shape()[-1], [1, 1],
                                                           'Decoder_layer_' + str(j), [1, 1], 'VALID', bn=True,
                                                           is_training=is_training)
             feature = f_decoder_i
@@ -278,7 +278,7 @@ class Network:
         return tf.nn.leaky_relu(f_pc + shortcut)
 
     def building_block(self, xyz, feature, neigh_idx, d_out, name, is_training):
-        d_in = feature.get_shape()[-1].value
+        d_in = feature.get_shape()[-1]
         f_xyz = self.relative_pos_encoding(xyz, neigh_idx)
         f_xyz = helper_tf_util.conv2d(f_xyz, d_in, [1, 1], name + 'mlp1', [1, 1], 'VALID', True, is_training)
         f_neighbours = self.gather_neighbour(tf.squeeze(feature, axis=2), neigh_idx)
@@ -336,7 +336,7 @@ class Network:
         # gather the coordinates or features of neighboring points
         batch_size = tf.shape(pc)[0]
         num_points = tf.shape(pc)[1]
-        d = pc.get_shape()[2].value
+        d = pc.get_shape()[2]
         index_input = tf.reshape(neighbor_idx, shape=[batch_size, -1])
         features = tf.batch_gather(pc, index_input)
         features = tf.reshape(features, [batch_size, num_points, tf.shape(neighbor_idx)[-1], d])
@@ -347,7 +347,7 @@ class Network:
         batch_size = tf.shape(feature_set)[0]
         num_points = tf.shape(feature_set)[1]
         num_neigh = tf.shape(feature_set)[2]
-        d = feature_set.get_shape()[3].value
+        d = feature_set.get_shape()[3]
         f_reshaped = tf.reshape(feature_set, shape=[-1, num_neigh, d])
         att_activation = tf.compat.v1.layers.dense(f_reshaped, d, activation=None, use_bias=False, name=name + 'fc')
         att_scores = tf.nn.softmax(att_activation, axis=1)
