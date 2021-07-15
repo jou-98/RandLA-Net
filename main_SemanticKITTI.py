@@ -115,7 +115,7 @@ class SemanticKITTI:
     def crop_pc(points, labels, search_tree, pick_idx):
         # crop a fixed size point cloud for training
         center_point = points[pick_idx, :].reshape(1, -1)
-        select_idx = search_tree.query(center_point, k=cfg.num_points)[1][0]
+	select_idx = search_tree.query(center_point, k=cfg.num_points)[1][0]
         select_idx = DP.shuffle_idx(select_idx)
         select_points = points[select_idx]
         select_labels = labels[select_idx]
