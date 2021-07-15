@@ -188,13 +188,14 @@ class Network:
             except tf.errors.InvalidArgumentError as e:
 
                 print('Caught a NaN error :')
+                print(f'========================================')
                 print(e.error_code)
                 print(e.message)
                 print(e.op)
                 print(e.op.name)
                 print([t.name for t in e.op.inputs])
                 print([t.name for t in e.op.outputs])
-
+                print(f'========================================')
                 a = 1 / 0
 
         print('finished')
