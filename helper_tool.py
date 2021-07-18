@@ -257,13 +257,13 @@ class DataProcessing:
                                      dtype=np.int32)
         elif dataset_name is 'SemanticKITTI':
             """
-            num_per_class = np.array([55437630, 320797, 541736, 2578735, 3274484, 552662, 184064, 78858,
-                                      240942562, 17294618, 170599734, 6369672, 230413074, 101130274, 476491114,
-                                      9833174, 129609852, 4506626, 1168181])
-            """
             num_per_class = np.array([87887479, 639562, 1281899, 519686, 599, 
             22750, 546605509, 40522808, 390723272, 9321480, 
             8378712, 1823430])
+            """
+            num_per_class = np.array([79594208, 612989, 1110793, 516709, 655, 22929,
+                                        516577928, 40058030, 372131795, 8985684, 
+                                        7842317, 1779202])
         weight = num_per_class / float(sum(num_per_class))
         ce_label_weight = 1 / (weight + 0.02)
         return np.expand_dims(ce_label_weight, axis=0)
