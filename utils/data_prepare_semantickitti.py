@@ -47,7 +47,8 @@ for seq_id in seq_list:
             labels = DP.load_label_kitti(join(label_path, str(scan_id[:-4]) + '.label'), remap_lut)
             sub_points, sub_labels = DP.grid_sub_sampling(points, labels=labels, grid_size=grid_size)
             if sub_points.shape[0] < 4096*3:
-                print(f'Smaller than 4096*3!')
+                print(f'SEQ is {seq_id} and NUM is {scan_id}')
+                print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
             search_tree = KDTree(sub_points)
             KDTree_save = join(KDTree_path_out, str(scan_id[:-4]) + '.pkl')
             np.save(join(pc_path_out, scan_id)[:-4], sub_points)
