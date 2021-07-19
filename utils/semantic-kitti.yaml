@@ -133,7 +133,7 @@ learning_map_inv: # inverse of previous map
   7: 44    # "parking"
   8: 48    # "sidewalk"
   9: 49    # "other-ground"
-  19: 80    # "pole"
+  10: 80    # "pole"
   11: 81    # "traffic-sign"
 learning_ignore: # Ignore classes
   0: True      # "unlabeled", and others ignored
