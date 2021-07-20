@@ -68,15 +68,12 @@ class SemanticKITTI:
                     pc_path = path_list[cloud_ind]
                     pc, tree, labels = self.get_data(pc_path)
                     # crop a small point cloud
-                    print(f'======== pc_path = {pc_path} ========')
-                    print(f'======== len(pc) = {len(pc)} ========')
                     pick_idx = np.random.choice(len(pc), 1)
                     selected_pc, selected_labels, selected_idx = self.crop_pc(pc, labels, tree, pick_idx)
                 else:
                     cloud_ind = int(np.argmin(self.min_possibility))
                     pick_idx = np.argmin(self.possibility[cloud_ind])
                     pc_path = path_list[cloud_ind]
-                    #print(f'======== pc_path={pc_path}, pick_idx={pick_idx} ========')
                     pc, tree, labels = self.get_data(pc_path)
                     selected_pc, selected_labels, selected_idx = self.crop_pc(pc, labels, tree, pick_idx)
 
@@ -118,7 +115,6 @@ class SemanticKITTI:
     def crop_pc(points, labels, search_tree, pick_idx):
         # crop a fixed size point cloud for training
         center_point = points[pick_idx, :].reshape(1, -1)
-        #print(f'======== center_point.shape={center_point.shape} ========')
         select_idx = search_tree.query(center_point, k=cfg.num_points)[1][0]
         select_idx = DP.shuffle_idx(select_idx)
         select_points = points[select_idx]
