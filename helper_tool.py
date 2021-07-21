@@ -19,7 +19,7 @@ class ConfigSemanticKITTI:
     k_n = 16  # KNN
     num_layers = 4  # Number of layers
     num_points = 4096 * 3  # Number of input points, changed from 11
-    num_classes = 12  # Number of valid classes, changed from 19
+    num_classes = 11  # Number of valid classes, changed from 19
     sub_grid_size = 0.06  # preprocess_parameter
 
     batch_size = 6  # batch_size during training
