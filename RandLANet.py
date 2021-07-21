@@ -243,7 +243,7 @@ class Network:
         iou_list = []
         for n in range(0, self.config.num_classes, 1):
             iou = true_positive_classes[n] / float(gt_classes[n] + positive_classes[n] - true_positive_classes[n])
-            print(f'IoU of class {n} is {iou}')
+            print(f'IoU of class {n} is {iou}, with number of ground truth classes {gt_classes[n]}')
             if np.isnan(iou): iou = 0.0
             iou_list.append(iou)
         mean_iou = sum(iou_list) / float(self.config.num_classes)
