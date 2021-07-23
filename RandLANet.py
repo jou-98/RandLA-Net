@@ -16,7 +16,7 @@ def log_out(out_str, f_out):
 
 
 class Network:
-    def __init__(self, dataset, config):
+    def __init__(self, dataset, config, ckpt=None):
         flat_inputs = dataset.flat_inputs
         self.config = config
         # Path of the result folder
@@ -97,6 +97,9 @@ class Network:
         c_proto = tf.compat.v1.ConfigProto()
         c_proto.gpu_options.allow_growth = True
         self.sess = tf.compat.v1.Session(config=c_proto)
+        # Change: added two lines below to load checkpoints
+        if ckpt is not None:
+            self.saver.restore(self.sess, ckpt)
         self.merged = tf.compat.v1.summary.merge_all()
         self.train_writer = tf.compat.v1.summary.FileWriter(config.train_sum_dir, self.sess.graph)
         self.sess.run(tf.compat.v1.global_variables_initializer())
