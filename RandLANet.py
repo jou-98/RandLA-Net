@@ -103,7 +103,7 @@ class Network:
             print(f'Session restored from ckpt.')
         self.merged = tf.compat.v1.summary.merge_all()
         self.train_writer = tf.compat.v1.summary.FileWriter(config.train_sum_dir, self.sess.graph)
-        self.sess.run(tf.compat.v1.global_variables_initializer())
+        if ckpt is None: self.sess.run(tf.compat.v1.global_variables_initializer())
 
     def inference(self, inputs, is_training):
 
