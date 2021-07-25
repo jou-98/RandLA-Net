@@ -16,7 +16,7 @@ def log_out(out_str, f_out):
 
 
 class Network:
-    def __init__(self, dataset, config, ckpt=None):
+    def __init__(self, dataset, config, ckpt=None, n_step=1):
         flat_inputs = dataset.flat_inputs
         self.config = config
         # Path of the result folder
@@ -41,7 +41,7 @@ class Network:
 
             self.labels = self.inputs['labels']
             self.is_training = tf.compat.v1.placeholder(tf.bool, shape=())
-            self.training_step = 1
+            self.training_step = n_step # changed from 1
             self.training_epoch = 0
             self.correct_prediction = 0
             self.accuracy = 0
