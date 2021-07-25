@@ -100,6 +100,7 @@ class Network:
         # Change: added two lines below to load checkpoints
         if ckpt is not None:
             self.saver.restore(self.sess, ckpt)
+            print(f'Session restored from ckpt.')
         self.merged = tf.compat.v1.summary.merge_all()
         self.train_writer = tf.compat.v1.summary.FileWriter(config.train_sum_dir, self.sess.graph)
         self.sess.run(tf.compat.v1.global_variables_initializer())
@@ -177,6 +178,7 @@ class Network:
                     snapshot_directory = join(self.saving_path, 'snapshots')
                     makedirs(snapshot_directory) if not exists(snapshot_directory) else None
                     self.saver.save(self.sess, snapshot_directory + '/snap', global_step=self.training_step)
+                    print(f'Saving model that achieved m_IoU of {m_iou} in {self.training_step} steps.')
                 self.mIou_list.append(m_iou)
                 log_out('Best m_IoU is: {:5.3f}'.format(max(self.mIou_list)), self.Log_file)
 
@@ -246,7 +248,6 @@ class Network:
         iou_list = []
         for n in range(0, self.config.num_classes, 1):
             iou = true_positive_classes[n] / float(gt_classes[n] + positive_classes[n] - true_positive_classes[n])
-            print(f'IoU of class {n} is {iou}, number of ground truth classes {gt_classes[n]}, number of positive classes is {positive_classes[n]}')
             if np.isnan(iou): iou = 0.0
             iou_list.append(iou)
         mean_iou = sum(iou_list) / float(self.config.num_classes)
