@@ -38,7 +38,7 @@ class ConfigSemanticKITTI:
 
     train_sum_dir = 'train_log'
     saving = True
-    saving_path = None
+    saving_path = 'ckpt/'# None
 
 
 class ConfigS3DIS:
