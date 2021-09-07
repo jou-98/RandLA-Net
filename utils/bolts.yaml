@@ -1,0 +1,35 @@
+# This file is covered by the LICENSE file in the root of this project.
+labels: 
+  0 : "unlabeled"
+  1 : "bolt"
+
+color_map: # bgr
+  0: [255, 0, 255]
+  1: [0, 200, 255]
+
+content: # as a ratio with the total number of points
+  0: 0.9653411968626164
+  1: 0.03465880313738
+
+# classes that are indistinguishable from single scan or inconsistent in
+# ground truth are mapped to their closest equivalent
+learning_map:
+  0 : 0     # "unlabeled"
+  1 : 1     # "bolt"
+
+
+learning_map_inv: # inverse of previous map
+  0: 0      # "unlabeled", and others ignored
+  1: 1     # "bolt"
+
+learning_ignore: # Ignore classes
+  0: True      # "unlabeled", and others ignored
+  1: False     # "bolt"
+
+split: # sequence numbers
+  train:
+    - 0
+  valid:
+    - 1
+  test:
+    - 2
