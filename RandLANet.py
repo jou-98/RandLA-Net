@@ -151,6 +151,7 @@ class Network:
 
     def train(self, dataset):
         log_out('****EPOCH {}****'.format(self.training_epoch), self.Log_file)
+        print(tf.test.is_gpu_available())
         self.sess.run(dataset.train_init_op)
         while self.training_epoch < self.config.max_epoch:
             t_start = time.time()
