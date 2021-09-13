@@ -198,6 +198,8 @@ if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     Mode = FLAGS.mode
+    
+    tf.debugging.set_log_device_placement(True)
 
     test_area = FLAGS.test_area
     dataset = SemanticKITTI(test_area)
