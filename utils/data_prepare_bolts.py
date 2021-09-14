@@ -47,8 +47,8 @@ for seq_id in seq_list:
             if int(scan_id[:6]) % 500 == 0:
                 print(scan_id)
             """
-            points = DP.load_pc_kitti(join(pc_path, scan_id))
-            labels = DP.load_label_kitti(join(label_path, str(scan_id[:-4]) + '.label'), remap_lut)
+            points = DP.load_pc_bolts(join(pc_path, scan_id))
+            labels = DP.load_label_bolts(join(label_path, str(scan_id[:-4]) + '.label'), remap_lut)
             sub_points, sub_labels = DP.grid_sub_sampling(points, labels=labels, grid_size=grid_size)
             if sub_points.shape[0] < 4096*80:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*80')
@@ -85,7 +85,7 @@ for seq_id in seq_list:
             if int(scan_id[:6]) % 500 == 0:
                 print(scan_id)
             """
-            points = DP.load_pc_kitti(join(pc_path, scan_id))
+            points = DP.load_pc_bolts(join(pc_path, scan_id))
             sub_points = DP.grid_sub_sampling(points, grid_size=0.06)
             if sub_points.shape[0] < 4096*80:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*80')
