@@ -20,8 +20,8 @@ remap_lut = np.zeros((max_key + 100), dtype=np.int32)
 remap_lut[list(remap_dict.keys())] = list(remap_dict.values())
 
 grid_size = 0.06
-dataset_path = TMPDIR + 'data/bolts'
-output_path = TMPDIR + 'data/bolts' + '_' + str(grid_size)
+dataset_path = TMPDIR + 'data/custom/bolts/'
+output_path = TMPDIR + 'data/custom/bolts' + '_' + str(grid_size)
 seq_list = np.sort(os.listdir(dataset_path))
 count1 = 0
 count2 = 0
