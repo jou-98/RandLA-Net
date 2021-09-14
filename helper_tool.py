@@ -217,7 +217,7 @@ class DataProcessing:
                 val_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
                 if seq_id == test_scan_num:
                     test_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
-            elif int(seq_id) >= 2 and seq_id == test_scan_num:
+            elif int(seq_id) >= 1 and seq_id == test_scan_num:
                 test_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
             elif seq_id in ['00']:
                 train_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
