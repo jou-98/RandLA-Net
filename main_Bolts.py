@@ -13,7 +13,7 @@ TMPDIR = '' # os.environ["TMPDIR"]
 class SemanticKITTI:
     def __init__(self, test_id):
         self.name = 'SemanticKITTI'
-        self.dataset_path = TMPDIR + 'data/semantic_kitti/dataset/sequences_0.06'
+        self.dataset_path = TMPDIR + 'data/semantic_kitti/dataset/sequences_0.01' # Changed from 0.06
         self.label_to_names = {0: 'unlabeled',
                                1: 'bolt'}
         self.num_classes = len(self.label_to_names)
@@ -21,7 +21,7 @@ class SemanticKITTI:
         self.label_to_idx = {l: i for i, l in enumerate(self.label_values)}
         self.ignored_labels = np.sort([0])
 
-        self.val_split = '08'
+        self.val_split = '02'
 
         self.seq_list = np.sort(os.listdir(self.dataset_path))
         self.test_scan_number = str(test_id)
