@@ -15,3 +15,7 @@ conda install -c open3d-admin open3d=0.9.0
 conda install pandas=0.25.3
 
 conda install -c anaconda cython 
+
+conda install -c conda-forge plyfile
+
+conda install tqdm

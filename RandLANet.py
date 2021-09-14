@@ -238,7 +238,7 @@ class Network:
                 val_total_correct += correct
                 val_total_seen += len(labels_valid)
 
-                conf_matrix = confusion_matrix(labels_valid, pred_valid, np.arange(0, self.config.num_classes, 1))
+                conf_matrix = confusion_matrix(labels_valid, pred_valid, labels=np.arange(0, self.config.num_classes, 1))
                 gt_classes += np.sum(conf_matrix, axis=1)
                 positive_classes += np.sum(conf_matrix, axis=0)
                 true_positive_classes += np.diagonal(conf_matrix)
