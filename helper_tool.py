@@ -204,6 +204,30 @@ class DataProcessing:
         return train_file_list, val_file_list, test_file_list
 
     @staticmethod
+    def get_file_list_bolts(dataset_path, test_scan_num):
+        seq_list = np.sort(os.listdir(dataset_path))
+
+        train_file_list = []
+        test_file_list = []
+        val_file_list = []
+        for seq_id in seq_list:
+            seq_path = join(dataset_path, seq_id)
+            pc_path = join(seq_path, 'velodyne')
+            if seq_id == '01':
+                val_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
+                if seq_id == test_scan_num:
+                    test_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
+            elif int(seq_id) >= 2 and seq_id == test_scan_num:
+                test_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
+            elif seq_id in ['00']:
+                train_file_list.append([join(pc_path, f) for f in np.sort(os.listdir(pc_path))])
+
+        train_file_list = np.concatenate(train_file_list, axis=0)
+        val_file_list = np.concatenate(val_file_list, axis=0)
+        test_file_list = np.concatenate(test_file_list, axis=0)
+        return train_file_list, val_file_list, test_file_list
+
+    @staticmethod
     def knn_search(support_pts, query_pts, k):
         """
         :param support_pts: points you have, B*N1*3

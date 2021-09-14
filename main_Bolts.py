@@ -25,7 +25,7 @@ class Bolts:
 
         self.seq_list = np.sort(os.listdir(self.dataset_path))
         self.test_scan_number = str(test_id)
-        self.train_list, self.val_list, self.test_list = DP.get_file_list(self.dataset_path,
+        self.train_list, self.val_list, self.test_list = DP.get_file_list_bolts(self.dataset_path,
                                                                           self.test_scan_number)
         self.train_list = DP.shuffle_list(self.train_list)
         self.val_list = DP.shuffle_list(self.val_list)
