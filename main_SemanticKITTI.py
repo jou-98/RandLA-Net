@@ -206,7 +206,7 @@ if __name__ == '__main__':
     dataset.init_input_pipeline()
 
     if Mode == 'train':
-        if FLAGS.load_model is not 'None':
+        if FLAGS.load_model != 'None':
             model = Network(dataset,cfg,FLAGS.load_model,n_step=int(FLAGS.n_step))
         else:
             model = Network(dataset,cfg,n_step=int(FLAGS.n_step))
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     elif Mode == 'test':
         cfg.saving = False
         model = Network(dataset, cfg)
-        if FLAGS.model_path is not 'None':
+        if FLAGS.model_path != 'None':
             chosen_snap = FLAGS.model_path
         else:
             chosen_snapshot = -1
