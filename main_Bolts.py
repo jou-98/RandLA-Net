@@ -10,10 +10,10 @@ import os, argparse, pickle
 
 TMPDIR = '' # os.environ["TMPDIR"]
 
-class SemanticKITTI:
+class Bolts:
     def __init__(self, test_id):
-        self.name = 'SemanticKITTI'
-        self.dataset_path = TMPDIR + 'data/semantic_kitti/dataset/sequences_0.01' # Changed from 0.06
+        self.name = 'Bolts'
+        self.dataset_path = TMPDIR + 'data/custom/bolts_0.01' # Changed from 0.06
         self.label_to_names = {0: 'unlabeled',
                                1: 'bolt'}
         self.num_classes = len(self.label_to_names)
@@ -190,11 +190,11 @@ if __name__ == '__main__':
     Mode = FLAGS.mode
 
     test_area = FLAGS.test_area
-    dataset = SemanticKITTI(test_area)
+    dataset = Bolts(test_area)
     dataset.init_input_pipeline()
 
     if Mode == 'train':
-        if FLAGS.load_model is not 'None':
+        if FLAGS.load_model != 'None':
             model = Network(dataset,cfg,FLAGS.load_model,n_step=int(FLAGS.n_step))
         else:
             model = Network(dataset,cfg,n_step=int(FLAGS.n_step))
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     elif Mode == 'test':
         cfg.saving = False
         model = Network(dataset, cfg)
-        if FLAGS.model_path is not 'None':
+        if FLAGS.model_path != 'None':
             chosen_snap = FLAGS.model_path
         else:
             chosen_snapshot = -1
