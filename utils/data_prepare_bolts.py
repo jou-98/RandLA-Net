@@ -51,16 +51,16 @@ for seq_id in seq_list:
             points = DP.load_pc_bolts(join(pc_path, scan_id))
             labels = DP.load_label_bolts(join(label_path, str(scan_id[:-4]) + '.label'), remap_lut)
             sub_points, sub_labels = DP.grid_sub_sampling(points, labels=labels, grid_size=grid_size)
+            if sub_points.shape[0] < 4096*60:
+                print(f'SEQ {seq_id} NUM {scan_id} < 4096*60')
+                print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
+                count1 += 1
             if sub_points.shape[0] < 4096*80:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*80')
                 print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
-                count1 += 1
+                count2 += 1
             if sub_points.shape[0] < 4096*100:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*100')
-                print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
-                count2 += 1
-            if sub_points.shape[0] < 4096*150:
-                print(f'SEQ {seq_id} NUM {scan_id} < 4096*150')
                 print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
                 count3 += 1
             search_tree = KDTree(sub_points)
@@ -88,16 +88,16 @@ for seq_id in seq_list:
             """
             points = DP.load_pc_bolts(join(pc_path, scan_id))
             sub_points = DP.grid_sub_sampling(points, grid_size=sys.argv[1]) # Changed from 0.06
+            if sub_points.shape[0] < 4096*60:
+                print(f'SEQ {seq_id} NUM {scan_id} < 4096*60')
+                print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
+                count1 += 1
             if sub_points.shape[0] < 4096*80:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*80')
                 print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
-                count1 += 1
+                count2 += 1
             if sub_points.shape[0] < 4096*100:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*100')
-                print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
-                count2 += 1
-            if sub_points.shape[0] < 4096*150:
-                print(f'SEQ {seq_id} NUM {scan_id} < 4096*150')
                 print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
                 count3 += 1
             search_tree = KDTree(sub_points)
@@ -111,4 +111,4 @@ for seq_id in seq_list:
             with open(proj_save, 'wb') as f:
                 pickle.dump([proj_inds], f)
 
-print(f'After preprocessing, {count1} PCs are smaller than 4096*80, {count2} PCs are smaller than 4096*100, {count3} PCs are smaller than 4096*150.')
+print(f'After preprocessing, {count1} PCs are smaller than 4096*60, {count2} PCs are smaller than 4096*80, {count3} PCs are smaller than 4096*100.')
