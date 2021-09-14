@@ -3,6 +3,7 @@ import numpy as np
 from os.path import join, exists, dirname, abspath
 from sklearn.neighbors import KDTree
 import os
+import sys
 
 TMPDIR = '' # os.environ["TMPDIR"]
 
@@ -19,7 +20,7 @@ max_key = max(remap_dict.keys())
 remap_lut = np.zeros((max_key + 100), dtype=np.int32)
 remap_lut[list(remap_dict.keys())] = list(remap_dict.values())
 
-grid_size = 0.06
+grid_size = float(sys.argv[1]) # Changed from 0.06
 dataset_path = TMPDIR + 'data/custom/bolts/'
 output_path = TMPDIR + 'data/custom/bolts' + '_' + str(grid_size)
 seq_list = np.sort(os.listdir(dataset_path))
@@ -86,7 +87,7 @@ for seq_id in seq_list:
                 print(scan_id)
             """
             points = DP.load_pc_bolts(join(pc_path, scan_id))
-            sub_points = DP.grid_sub_sampling(points, grid_size=0.06)
+            sub_points = DP.grid_sub_sampling(points, grid_size=sys.argv[1]) # Changed from 0.06
             if sub_points.shape[0] < 4096*80:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*80')
                 print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
