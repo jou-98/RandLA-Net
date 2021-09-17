@@ -226,6 +226,7 @@ class Network:
                 ops = (self.prob_logits, self.labels, self.accuracy)
                 stacked_prob, labels, acc = self.sess.run(ops, {self.is_training: False})
                 print(f'Shape of stacked_prob is {stacked_prob.shape}, max of stacked_prob is {np.max(stacked_prob,axis=0)}')
+                stacked_prob[1,:] *= 1.2
                 pred = np.argmax(stacked_prob, 1)
                 if not self.config.ignored_label_inds:
                     pred_valid = pred
