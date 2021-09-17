@@ -44,9 +44,9 @@ class ConfigSemanticKITTI:
 class ConfigBolts:
     k_n = 16  # KNN
     num_layers = 4  # Number of layers
-    num_points = 4096 * 20  # Number of input points, changed from 11
+    num_points = 4096 * 80  # Number of input points, changed from 11
     num_classes = 2  # Number of valid classes, changed from 19
-    sub_grid_size = 0.01  # preprocess_parameter, changed from 0.01
+    sub_grid_size = 0.001  # preprocess_parameter, changed from 0.01
 
     batch_size = 1  # batch_size during training
     val_batch_size = 1  # batch_size during validation and test
@@ -332,7 +332,7 @@ class DataProcessing:
             num_per_class = np.array([608024, 1107391, 513295, 599, 22750, 199735165, 
                             19155683, 149962519, 1998558, 3728123, 946512]) # first item 38036936
         elif dataset_name == 'Bolts':
-            num_per_class = np.array([103083083,4506748])
+            num_per_class = np.array([103083083*10,4506748])
             """
             num_per_class = np.array([79594208, 612989, 1110793, 516709, 655, 22929,
                                         516577928, 40058030, 372131795, 8985684, 
