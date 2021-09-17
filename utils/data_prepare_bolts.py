@@ -87,7 +87,7 @@ for seq_id in seq_list:
                 print(scan_id)
             """
             points = DP.load_pc_bolts(join(pc_path, scan_id))
-            sub_points = DP.grid_sub_sampling(points, grid_size=sys.argv[1]) # Changed from 0.06
+            sub_points = DP.grid_sub_sampling(points, grid_size=grid_size) # Changed from 0.06
             if sub_points.shape[0] < 4096*60:
                 print(f'SEQ {seq_id} NUM {scan_id} < 4096*60')
                 print(f'Original length is {points.shape[0]} and processed length is {sub_points.shape[0]}')
