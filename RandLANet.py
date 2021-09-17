@@ -164,6 +164,7 @@ class Network:
                        self.labels,
                        self.accuracy]
                 _, _, summary, l_out, probs, labels, acc = self.sess.run(ops, {self.is_training: True})
+                print(f'Shape of probs is {probs.shape}, max of probs is {np.max(probs,axis=0)}')
                 self.train_writer.add_summary(summary, self.training_step)
                 t_end = time.time()
                 if self.training_step % 50 == 0:
