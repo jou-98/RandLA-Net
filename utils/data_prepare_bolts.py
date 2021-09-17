@@ -38,7 +38,7 @@ for seq_id in seq_list:
     os.makedirs(pc_path_out) if not exists(pc_path_out) else None
     os.makedirs(KDTree_path_out) if not exists(KDTree_path_out) else None
 
-    if int(seq_id) < 10:
+    if int(seq_id) < 2:
         label_path = join(seq_path, 'labels')
         label_path_out = join(seq_path_out, 'labels')
         os.makedirs(label_path_out) if not exists(label_path_out) else None
@@ -69,7 +69,7 @@ for seq_id in seq_list:
             np.save(join(label_path_out, scan_id)[:-4], sub_labels)
             with open(KDTree_save, 'wb') as f:
                 pickle.dump(search_tree, f)
-            if seq_id == '08':
+            if seq_id == '01':
                 proj_path = join(seq_path_out, 'proj')
                 os.makedirs(proj_path) if not exists(proj_path) else None
                 proj_inds = np.squeeze(search_tree.query(points, return_distance=False))
