@@ -332,7 +332,7 @@ class DataProcessing:
             num_per_class = np.array([608024, 1107391, 513295, 599, 22750, 199735165, 
                             19155683, 149962519, 1998558, 3728123, 946512]) # first item 38036936
         elif dataset_name == 'Bolts':
-            num_per_class = np.array([103083083*100,4506748])
+            num_per_class = np.array([103083083,4506748])
             """
             num_per_class = np.array([79594208, 612989, 1110793, 516709, 655, 22929,
                                         516577928, 40058030, 372131795, 8985684, 
@@ -340,6 +340,7 @@ class DataProcessing:
             """
         weight = num_per_class / float(sum(num_per_class))
         ce_label_weight = 1 / (weight + 0.02)
+        ce_label_weight[0] /= 10
         return np.expand_dims(ce_label_weight, axis=0)
 
 
