@@ -13,7 +13,7 @@ TMPDIR = '' # os.environ["TMPDIR"]
 class Bolts:
     def __init__(self, test_id):
         self.name = 'Bolts'
-        self.dataset_path = TMPDIR + 'data/custom/bolts_0.001' # Changed from 0.06, 0.01
+        self.dataset_path = TMPDIR + 'data/custom/bolts_0.01' # Changed from 0.06, 0.01
         self.label_to_names = {0: 'unlabeled',
                                1: 'bolt'}
         self.num_classes = len(self.label_to_names)
