@@ -48,7 +48,7 @@ class ConfigBolts:
     num_classes = 2  # Number of valid classes, changed from 19
     sub_grid_size = 0.01  # preprocess_parameter, changed from 0.01
 
-    batch_size = 5  # batch_size during training
+    batch_size = 2  # batch_size during training
     val_batch_size = 1  # batch_size during validation and test
     train_steps = 500  # Number of steps per epochs
     val_steps = 100  # Number of validation steps per epoch
