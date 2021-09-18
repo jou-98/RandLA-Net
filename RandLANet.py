@@ -273,11 +273,12 @@ class Network:
         weights = tf.reduce_sum(input_tensor=class_weights * one_hot_labels, axis=1)
         # Line below changed from softmax_cross_entropy
         # Testing 0.01 vs. 0.99 for positional weights
-        pos_w = tf.constant([0.01,0.99])
+        pos_w = tf.constant([0.99*0.99,0.01*0.01])
         unweighted_losses = tf.nn.weighted_cross_entropy_with_logits(logits=logits, labels=tf.stop_gradient(one_hot_labels),pos_weight=pos_w)
         #unweighted_losses = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=tf.stop_gradient(one_hot_labels))
         weighted_losses = unweighted_losses # unweighted_losses * weights
         output_loss = tf.reduce_mean(input_tensor=weighted_losses)
+        print(f'output_loss is {output_loss}')
         return output_loss
 
     def dilated_res_block(self, feature, xyz, neigh_idx, d_out, name, is_training):
