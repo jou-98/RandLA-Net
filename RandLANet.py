@@ -164,7 +164,6 @@ class Network:
                        self.labels,
                        self.accuracy]
                 _, _, summary, l_out, probs, labels, acc = self.sess.run(ops, {self.is_training: True})
-                print(f'Shape of probs is {probs.shape}, max of probs is {np.max(probs,axis=0)}')
                 self.train_writer.add_summary(summary, self.training_step)
                 t_end = time.time()
                 if self.training_step % 50 == 0:
@@ -225,8 +224,6 @@ class Network:
             try:
                 ops = (self.prob_logits, self.labels, self.accuracy)
                 stacked_prob, labels, acc = self.sess.run(ops, {self.is_training: False})
-                print(f'Shape of stacked_prob is {stacked_prob.shape}, max of stacked_prob is {np.max(stacked_prob,axis=0)}')
-                stacked_prob[1,:] *= 5
                 pred = np.argmax(stacked_prob, 1)
                 if not self.config.ignored_label_inds:
                     pred_valid = pred
