@@ -44,7 +44,7 @@ class ConfigSemanticKITTI:
 class ConfigBolts:
     k_n = 16  # KNN
     num_layers = 4  # Number of layers
-    num_points = 4096 * 80  # Number of input points, changed from 11
+    num_points = 4096 * 60  # Number of input points, changed from 11
     num_classes = 2  # Number of valid classes, changed from 19
     sub_grid_size = 0.01  # preprocess_parameter, changed from 0.01
 
