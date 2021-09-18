@@ -274,10 +274,11 @@ class Network:
         class_weights = tf.convert_to_tensor(value=pre_cal_weights, dtype=tf.float32)
         one_hot_labels = tf.one_hot(labels, depth=self.config.num_classes)
         weights = tf.reduce_sum(input_tensor=class_weights * one_hot_labels, axis=1)
-        # Line below changed from weighted_cross_entropy
+        # Line below changed from softmax_cross_entropy
         # Testing 0.01 vs. 0.99 for positional weights
-        pos_w = tf.constant([0.01,0.99])
-        unweighted_losses = tf.nn.weighted_cross_entropy_with_logits(logits=logits, labels=tf.stop_gradient(one_hot_labels),pos_weight=pos_w)
+        #pos_w = tf.constant([0.01,0.99])
+        #unweighted_losses = tf.nn.weighted_cross_entropy_with_logits(logits=logits, labels=tf.stop_gradient(one_hot_labels),pos_weight=pos_w)
+        unweighted_losses = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=tf.stop_gradient(one_hot_labels))
         weighted_losses = unweighted_losses * weights
         output_loss = tf.reduce_mean(input_tensor=weighted_losses)
         return output_loss
