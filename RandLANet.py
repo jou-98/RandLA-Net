@@ -172,7 +172,7 @@ class Network:
                 self.training_step += 1
 
             except tf.errors.OutOfRangeError:
-
+                log_out(f'output_loss is {self.loss}', self.Log_file)
                 m_iou = self.evaluate(dataset)
                 if m_iou > np.max(self.mIou_list):
                     # Save the best model
@@ -278,7 +278,6 @@ class Network:
         #unweighted_losses = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=tf.stop_gradient(one_hot_labels))
         weighted_losses = unweighted_losses # unweighted_losses * weights
         output_loss = tf.reduce_mean(input_tensor=weighted_losses)
-        log_out(f'output_loss is {output_loss}', self.Log_file)
         return output_loss
 
     def dilated_res_block(self, feature, xyz, neigh_idx, d_out, name, is_training):
