@@ -20,8 +20,8 @@ def dice_coef(y_true, y_pred, smooth=1.0):
     y_true_f = tf.reshape(y_true, (1,-1))
     y_pred_f = tf.reshape(y_pred, (1,-1))
     # Change: Adding typecast to hopefully avoid error
-    #y_true_f = tf.cast(y_true_f,tf.float32)
-    #y_pred_f = tf.cast(y_pred_f,tf.float32)
+    y_true_f = tf.cast(y_true_f,tf.float32)
+    y_pred_f = tf.cast(y_pred_f,tf.float32)
     intersection = tf.math.reduce_sum(y_true_f * y_pred_f) 
     return (2. * intersection + smooth) / (
         tf.math.reduce_sum(y_true_f) + tf.math.reduce_sum(y_pred_f) + smooth)
