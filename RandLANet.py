@@ -3,6 +3,7 @@ from os import makedirs
 from sklearn.metrics import confusion_matrix
 from helper_tool import DataProcessing as DP
 import tensorflow as tf
+from tensorflow.keras import backend as K
 import numpy as np
 import helper_tf_util
 import time
