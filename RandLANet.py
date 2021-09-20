@@ -14,6 +14,20 @@ def log_out(out_str, f_out):
     f_out.flush()
     print(out_str)
 
+def dice_coef(y_true, y_pred, smooth=1.0):
+
+    y_true_f = K.flatten(y_true)
+    y_pred_f = K.flatten(y_pred)
+    # Change: Adding typecast to hopefully avoid error
+    y_true_f = tf.cast(y_true_f,tf.float32)
+    y_pred_f = tf.cast(y_pred_f,tf.float32)
+    intersection = K.sum(y_true_f * y_pred_f) 
+    return (2. * intersection + smooth) / (
+        K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
+
+def dice_coef_loss(y_true, y_pred):
+    return -dice_coef(y_true, y_pred)
 
 class Network:
     def __init__(self, dataset, config, ckpt=None, n_step=1):
@@ -266,6 +280,8 @@ class Network:
         return mean_iou
 
     def get_loss(self, logits, labels, pre_cal_weights):
+        return dice_coef_loss(labels,logits)
+        """
         # calculate the weighted cross entropy according to the inverse frequency
         class_weights = tf.convert_to_tensor(value=pre_cal_weights, dtype=tf.float32)
         one_hot_labels = tf.one_hot(labels, depth=self.config.num_classes)
@@ -278,6 +294,7 @@ class Network:
         weighted_losses = unweighted_losses * weights * weights
         output_loss = tf.reduce_mean(input_tensor=weighted_losses)
         return output_loss
+        """
 
     def dilated_res_block(self, feature, xyz, neigh_idx, d_out, name, is_training):
         f_pc = helper_tf_util.conv2d(feature, d_out // 2, [1, 1], name + 'mlp1', [1, 1], 'VALID', True, is_training)
