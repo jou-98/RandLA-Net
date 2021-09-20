@@ -17,7 +17,7 @@ def log_out(out_str, f_out):
 
 def dice_coef(y_true, y_pred, smooth=1.0):
     y_pred = tf.math.argmax(y_pred, axis=1, output_type=tf.dtypes.int32)
-    y_pred = tf.math.sigmoid(y_pred)
+    #y_pred = tf.math.sigmoid(y_pred)
     y_true_f = tf.reshape(y_true, (1,-1))
     y_pred_f = tf.reshape(y_pred, (1,-1))
     numerator = 2 * tf.reduce_sum(y_true * y_pred)
