@@ -16,7 +16,7 @@ def log_out(out_str, f_out):
     print(out_str)
 
 def dice_coef(y_true, y_pred, smooth=1.0):
-
+    y_pred = np.argmax(y_pred,1)
     y_true_f = tf.reshape(y_true, (1,-1))
     y_pred_f = tf.reshape(y_pred, (1,-1))
     # Change: Adding typecast to hopefully avoid error
