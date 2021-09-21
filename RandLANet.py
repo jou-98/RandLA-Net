@@ -284,7 +284,6 @@ class Network:
 
 
     def softargmax(self, x, beta=1e10):
-        x = tf.convert_to_tensor(x)
         x_range = tf.range(x.shape.as_list()[-1], dtype=x.dtype)
         return tf.reduce_sum(tf.nn.softmax(x*beta) * x_range, axis=-1)
 
