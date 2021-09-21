@@ -15,26 +15,6 @@ def log_out(out_str, f_out):
     f_out.flush()
     print(out_str)
 
-def dice_coef(y_true, y_pred, smooth=1.0):
-    #print("[dice_loss] y_pred=",y_pred,"y_true=",y_true)
-    print(f'shape of y_true is {tf.shape(y_true)}, shape of y_pred is {tf.shape(y_pred)}')
-    y_true = tf.cast(y_true, tf.float32)
-    numerator = 2 * tf.reduce_sum(y_true * y_pred)
-    denominator = tf.reduce_sum(y_true + y_pred)
-    return 1 - numerator / denominator
-    """
-    # Change: Adding typecast to hopefully avoid error
-    y_true_f = tf.cast(y_true_f,tf.float32)
-    #y_pred_f = tf.cast(y_pred_f,tf.float32)
-    intersection = tf.math.reduce_sum(y_true_f * y_pred_f) 
-    return (2. * intersection + smooth) / (
-        tf.math.reduce_sum(y_true_f) + tf.math.reduce_sum(y_pred_f) + smooth)
-    """
-
-
-def dice_coef_loss(y_true, y_pred):
-    return -dice_coef(y_true, y_pred)
-
 class Network:
     def __init__(self, dataset, config, ckpt=None, n_step=1):
         flat_inputs = dataset.flat_inputs
@@ -300,7 +280,26 @@ class Network:
         weighted_losses = unweighted_losses * weights * weights
         output_loss = tf.reduce_mean(input_tensor=weighted_losses)
         return output_loss
-        
+
+    def dice_coef(self, y_true, y_pred, smooth=1.0):
+        #print("[dice_loss] y_pred=",y_pred,"y_true=",y_true)
+        print(f'shape of y_true is {tf.shape(y_true)}, shape of y_pred is {tf.shape(y_pred)}')
+        y_true = tf.cast(y_true, tf.float32)
+        numerator = 2 * tf.reduce_sum(y_true * y_pred)
+        denominator = tf.reduce_sum(y_true + y_pred)
+        return 1 - numerator / denominator
+        """
+        # Change: Adding typecast to hopefully avoid error
+        y_true_f = tf.cast(y_true_f,tf.float32)
+        #y_pred_f = tf.cast(y_pred_f,tf.float32)
+        intersection = tf.math.reduce_sum(y_true_f * y_pred_f) 
+        return (2. * intersection + smooth) / (
+            tf.math.reduce_sum(y_true_f) + tf.math.reduce_sum(y_pred_f) + smooth)
+        """
+
+
+    def dice_coef_loss(self, y_true, y_pred):
+        return -dice_coef(y_true, y_pred)
 
     def dilated_res_block(self, feature, xyz, neigh_idx, d_out, name, is_training):
         f_pc = helper_tf_util.conv2d(feature, d_out // 2, [1, 1], name + 'mlp1', [1, 1], 'VALID', True, is_training)
