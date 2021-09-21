@@ -286,6 +286,7 @@ class Network:
         #print("[dice_loss] y_pred=",y_pred,"y_true=",y_true)
         print(f'shape of y_true is {tf.shape(y_true)}, shape of y_pred is {tf.shape(y_pred)}')
         y_true = tf.cast(y_true, tf.float32)
+        y_pred = tf.math.argmax(y_pred)
         y_pred = tf.cast(y_pred, tf.float32)
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
