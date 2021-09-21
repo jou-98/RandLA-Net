@@ -282,10 +282,16 @@ class Network:
         return output_loss
         """
 
+
+    def softargmax(x, beta=1e10):
+        x = tf.convert_to_tensor(x)
+        x_range = tf.range(x.shape.as_list()[-1], dtype=x.dtype)
+        return tf.reduce_sum(tf.nn.softmax(x*beta) * x_range, axis=-1)
+
     def dice_loss(self, y_true, y_pred, smooth=1.0):
         """
         # Onehot
-        tf.reshape(y_true,[-1,1])
+        y_true = tf.reshape(y_true,[-1,1])
         y_true = tf.one_hot(y_true, depth=self.config.num_classes)
         y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.math.sigmoid(y_pred)
@@ -293,8 +299,9 @@ class Network:
         denominator = tf.reduce_sum(y_true + y_pred)
         """
         # Class 1 only
-        tf.reshape(y_true,[-1,1])
-        y_pred = tf.argmax(y_pred,1,output_type=tf.dtypes.int32)
+        y_true = tf.reshape(y_true,[-1,1])
+        y_pred = softargmax(y_pred)
+        y_pred = tf.reshape(y_pred,[-1,1])
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
         return 1 - numerator / denominator
