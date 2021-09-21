@@ -283,15 +283,22 @@ class Network:
         """
 
     def dice_loss(self, y_true, y_pred, smooth=1.0):
+        """
+        # Onehot
         tf.reshape(y_true,[-1,1])
         y_true = tf.one_hot(y_true, depth=self.config.num_classes)
         y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.math.sigmoid(y_pred)
-        #y_pred = tf.slice(y_pred,[0,1],[-1,1])
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
-        
+        """
+        # Class 1 only
+        tf.reshape(y_true,[-1,1])
+        y_pred = tf.argmax(y_pred)
+        numerator = 2 * tf.reduce_sum(y_true * y_pred)
+        denominator = tf.reduce_sum(y_true + y_pred)
         return 1 - numerator / denominator
+
 
     def dilated_res_block(self, feature, xyz, neigh_idx, d_out, name, is_training):
         f_pc = helper_tf_util.conv2d(feature, d_out // 2, [1, 1], name + 'mlp1', [1, 1], 'VALID', True, is_training)
