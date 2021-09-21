@@ -300,7 +300,7 @@ class Network:
 
 
     def dice_coef_loss(self, y_true, y_pred):
-        return -dice_coef(y_true, y_pred)
+        return -self.dice_coef(y_true, y_pred)
 
     def dilated_res_block(self, feature, xyz, neigh_idx, d_out, name, is_training):
         f_pc = helper_tf_util.conv2d(feature, d_out // 2, [1, 1], name + 'mlp1', [1, 1], 'VALID', True, is_training)
