@@ -283,7 +283,7 @@ class Network:
         """
 
 
-    def softargmax(x, beta=1e10):
+    def softargmax(self, x, beta=1e10):
         x = tf.convert_to_tensor(x)
         x_range = tf.range(x.shape.as_list()[-1], dtype=x.dtype)
         return tf.reduce_sum(tf.nn.softmax(x*beta) * x_range, axis=-1)
@@ -300,7 +300,7 @@ class Network:
         """
         # Class 1 only
         y_true = tf.reshape(y_true,[-1,1])
-        y_pred = softargmax(y_pred)
+        y_pred = self.softargmax(y_pred)
         y_pred = tf.reshape(y_pred,[-1,1])
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
