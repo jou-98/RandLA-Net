@@ -294,7 +294,7 @@ class Network:
         """
         # Class 1 only
         tf.reshape(y_true,[-1,1])
-        y_pred = tf.argmax(y_pred)
+        y_pred = tf.argmax(y_pred,1,output_type=tf.dtypes.int32)
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
         return 1 - numerator / denominator
