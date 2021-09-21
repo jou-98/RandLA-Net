@@ -17,6 +17,7 @@ def log_out(out_str, f_out):
 
 def dice_coef(y_true, y_pred, smooth=1.0):
     #print("[dice_loss] y_pred=",y_pred,"y_true=",y_true)
+    print(f'shape of y_true is {tf.shape(y_true)}, shape of y_pred is {tf.shape(y_pred)}')
     y_true = tf.cast(y_true, tf.float32)
     numerator = 2 * tf.reduce_sum(y_true * y_pred)
     denominator = tf.reduce_sum(y_true + y_pred)
