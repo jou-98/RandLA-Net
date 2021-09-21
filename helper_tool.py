@@ -210,10 +210,7 @@ class DataProcessing:
         train_file_list = []
         test_file_list = []
         val_file_list = []
-        print(f'seq_list is {seq_list}')
         for seq_id in seq_list:
-            print(f'seq_id is {seq_id}')
-            print(f'seq_id >= 1 is {int(seq_id) >= 1} and test_scan_num is {test_scan_num}')
             seq_path = join(dataset_path, seq_id)
             pc_path = join(seq_path, 'velodyne')
             if seq_id == '01':
