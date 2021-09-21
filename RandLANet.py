@@ -266,7 +266,7 @@ class Network:
         return mean_iou
 
     def get_loss(self, logits, labels, pre_cal_weights):
-        return self.dice_coef_loss(labels,logits)
+        return self.dice_loss(labels,logits,smooth=1.0)
         """
         # calculate the weighted cross entropy according to the inverse frequency
         class_weights = tf.convert_to_tensor(value=pre_cal_weights, dtype=tf.float32)
@@ -282,7 +282,7 @@ class Network:
         return output_loss
         """
 
-    def dice_coef(self, y_true, y_pred, smooth=1.0):
+    def dice_loss(self, y_true, y_pred, smooth=1.0):
         y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.math.sigmoid(y_pred)
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
