@@ -24,7 +24,7 @@ def dice_coef(y_true, y_pred, smooth=1.0):
     numerator = 2 * tf.reduce_sum(y_true * y_pred)
     denominator = tf.reduce_sum(y_true + y_pred)
 
-    return 1 - numerator / denominator
+    return 1. - numerator / 1. + denominator
     """
     # Change: Adding typecast to hopefully avoid error
     y_true_f = tf.cast(y_true_f,tf.float32)
