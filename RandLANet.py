@@ -284,7 +284,8 @@ class Network:
 
 
     def softargmax(self, x, beta=1e10):
-        x_range = tf.range(x.shape.as_list()[-1], dtype=x.dtype)
+        #x_range = tf.range(x.shape.as_list()[-1], dtype=x.dtype)
+        x_range = tf.range(list(x.shape)[-1], dtype=x.dtype)
         return tf.reduce_sum(tf.nn.softmax(x*beta) * x_range, axis=-1)
 
     def dice_loss(self, y_true, y_pred, smooth=1.0):
