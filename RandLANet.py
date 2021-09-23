@@ -96,6 +96,7 @@ class Network:
         self.saver = tf.compat.v1.train.Saver(my_vars, max_to_keep=100)
         c_proto = tf.compat.v1.ConfigProto()
         c_proto.gpu_options.allow_growth = True
+        c_proto.gpu_options.visible_device_list = '1'
         self.sess = tf.compat.v1.Session(config=c_proto)
         # Change: added two lines below to load checkpoints
         if ckpt is not None:
@@ -151,7 +152,7 @@ class Network:
 
     def train(self, dataset):
         log_out('****EPOCH {}****'.format(self.training_epoch), self.Log_file)
-        #tf.config.list_physical_devices('GPU')        
+        tf.config.list_physical_devices('GPU')        
         self.sess.run(dataset.train_init_op)
         while self.training_epoch < self.config.max_epoch:
             t_start = time.time()
