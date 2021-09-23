@@ -300,6 +300,7 @@ class Network:
         """
         # Class 1 only
         y_true = tf.reshape(y_true,[-1,1])
+        y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.nn.softmax(y_pred * 1e10)
         y_pred = tf.slice(y_pred,[0,1],[-1,1])
         y_pred = tf.reshape(y_pred,[-1,1])
