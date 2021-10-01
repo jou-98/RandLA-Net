@@ -95,8 +95,6 @@ class Network:
         my_vars = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.GLOBAL_VARIABLES)
         self.saver = tf.compat.v1.train.Saver(my_vars, max_to_keep=100)
         c_proto = tf.compat.v1.ConfigProto()
-        c_proto.gpu_options.allow_growth = True
-        c_proto.gpu_options.visible_device_list = "1"
         self.sess = tf.compat.v1.Session(config=c_proto)
         # Change: added two lines below to load checkpoints
         if ckpt is not None:
