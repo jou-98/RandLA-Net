@@ -284,6 +284,7 @@ class Network:
 
     def dice_loss(self, y_true, y_pred, weights=None):
         if weights is None: weights = tf.constant([0.01,0.99])
+        """
         # Onehot
         y_true = tf.reshape(y_true,[-1,1])
         y_true = tf.one_hot(y_true, depth=self.config.num_classes)
@@ -300,7 +301,7 @@ class Network:
         y_pred = tf.reshape(y_pred,[-1,1])
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
-        """
+        
         return 1 - numerator / denominator
 
 
