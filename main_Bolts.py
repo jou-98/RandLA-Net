@@ -185,15 +185,16 @@ if __name__ == '__main__':
     FLAGS = parser.parse_args()
 
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
+    # os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
     # dev = tf.config.list_physical_devices('GPU')
     # tf.config.set_visible_devices(dev[FLAGS.gpu],'GPU')
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     Mode = FLAGS.mode
 
-    test_area = FLAGS.test_area
-    dataset = Bolts(test_area)
-    dataset.init_input_pipeline()
+    with tf.device(f'/GPU:{str(FLAGS.gpu)}'):
+        test_area = FLAGS.test_area
+        dataset = Bolts(test_area)
+        dataset.init_input_pipeline()
 
     if Mode == 'train':
         if FLAGS.load_model != 'None':
