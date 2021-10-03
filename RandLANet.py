@@ -265,8 +265,8 @@ class Network:
         return mean_iou
 
     def get_loss(self, logits, labels, pre_cal_weights):
-        #return self.dice_loss(labels,logits)
-        
+        return self.dice_loss(labels,logits)
+        """
         # calculate the weighted cross entropy according to the inverse frequency
         class_weights = tf.convert_to_tensor(value=pre_cal_weights, dtype=tf.float32)
         one_hot_labels = tf.one_hot(labels, depth=self.config.num_classes)
@@ -279,11 +279,17 @@ class Network:
         weighted_losses = unweighted_losses * weights * weights
         output_loss = tf.reduce_mean(input_tensor=weighted_losses)
         return output_loss
-        
+        """
 
 
     def dice_loss(self, y_true, y_pred, weights=None):
         if weights is None: weights = tf.constant([0.01,0.99])
+        # Simple
+        y_true = tf.cast(y_true, tf.float32)
+        y_pred = tf.math.sigmoid(y_pred)
+        numerator = 2 * tf.reduce_sum(y_true * y_pred)
+        denominator = tf.reduce_sum(y_true + y_pred)
+
         """
         # Onehot
         y_true = tf.reshape(y_true,[-1,1])
@@ -292,7 +298,7 @@ class Network:
         y_pred = tf.math.sigmoid(y_pred) * weights
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
-        """
+        
         # Class 1 only
         y_true = tf.reshape(y_true,[-1,1])
         y_true = tf.cast(y_true, tf.float32)
@@ -301,7 +307,7 @@ class Network:
         y_pred = tf.reshape(y_pred,[-1,1])
         numerator = 2 * tf.reduce_sum(y_true * y_pred)
         denominator = tf.reduce_sum(y_true + y_pred)
-        
+        """
         return 1 - numerator / denominator
 
 
